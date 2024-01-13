@@ -20,12 +20,12 @@ app.listen(PORT, () => {
 app.get('/products', async (req, res) => {
   try {
     const limit = parseInt(req.query.limit);
-    const productos = await manager.getProducts();
+    const products = await manager.getProducts();
 
     if (!isNaN(limit)) {
-      res.send(productos.slice(0, limit));
+      res.send(products.slice(0, limit));
     } else {
-      res.send(productos);
+      res.send(products);
     }
   } catch (error) {
     console.error('Error al obtener productos:', error);
@@ -36,10 +36,10 @@ app.get('/products', async (req, res) => {
 app.get('/products/:id', async (req, res) => {
   try {
     const id = parseInt(req.params.id);
-    const producto = await manager.getProductById(id);
+    const product = await manager.getProductById(id);
 
-    if (producto) {
-      res.send(producto);
+    if (product) {
+      res.send(product);
     } else {
       res.status(404).send('Producto no encontrado');
     }

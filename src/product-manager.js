@@ -9,7 +9,7 @@ class ProductManager{
         this.path = path;
         this.products = [];
         if (path) {
-          this.leerArchivo()
+          this.readFolder()
             .then(data => {
               this.products = data;
             })
@@ -19,8 +19,8 @@ class ProductManager{
         }
       }
 
-    async addProduct(nuevoObjeto){
-        let { title, description, price, img, code, stock} = nuevoObjeto;
+    async addProduct(newObject){
+        let { title, description, price, img, code, stock} = newObject;
 
         if(!title || !description || !price || !img || !code || !stock) 
         {
@@ -44,7 +44,7 @@ class ProductManager{
     
         this.products.push(newProduct);
 
-        await this.saveArchivo(this.products);
+        await this.saveFile(this.products);
     }
 
     getProducts(){
@@ -59,13 +59,13 @@ class ProductManager{
     async getProductById(id){
 
         try {
-            const arrayProductos = await this.leerArchivo();
-            const buscado = arrayProductos.find(item => item.id === id);
-            if(!buscado){
+            const arrayProducts = await this.readFolder();
+            const wanted = arrayProducts.find(item => item.id === id);
+            if(!wanted){
                 console.log("Producto no encontrado");
             } else {  
                 console.log("Producto encontrado");
-                return buscado;
+                return wanted;
             }
         } catch (error) {
             console.log("ERROR al leer archivo", error);
@@ -75,20 +75,20 @@ class ProductManager{
        
     }
 
-    async leerArchivo () {
+    async readFolder () {
         try {
-            const respuesta = await fs.readFile(this.path,"utf-8");
-            const arrayProductos = JSON.parse(respuesta);
-            return arrayProductos;
+            const answer = await fs.readFile(this.path,"utf-8");
+            const arrayProducts = JSON.parse(answer);
+            return arrayProducts;
 
         } catch (error) {
             console.log("error al leer un archivo", error);
         }
     }
 
-    async saveArchivo(arrayProductos) {
+    async saveFile(arrayProducts) {
         try {
-            await fs.writeFile(this.path, JSON.stringify(arrayProductos, null, 2) );
+            await fs.writeFile(this.path, JSON.stringify(arrayProducts, null, 2) );
 
         } catch (error) {
             console.log("ERROR al guardar el archivo", error);
@@ -96,14 +96,14 @@ class ProductManager{
         
     }
 
-    async updateProduct(id, productoActualizado){
+    async updateProduct(id, refreshProduct ){
         try {
-            const arrayProductos = await this.leerArchivo();
-            const index = arrayProductos.findIndex(item => item.id === id);
+            const arrayProducts = await this.readFolder();
+            const index = arrayProducts.findIndex(item => item.id === id);
 
             if(index !== -1){
-                arrayProductos.splice(index, 1, productoActualizado);
-                await this.saveArchivo(arrayProductos);
+                arrayProductos.splice(index, 1, refreshProduct);
+                await this.saveFile(arrayProducts);
             } else {
                 console.log("no se encontró el producto");
             }
@@ -117,9 +117,9 @@ class ProductManager{
 
     async deleteProduct(id) {
         try {
-            const arrayProductos = await this.leerArchivo();
-            const newArray = arrayProductos.filter(item => item.id !== id);
-            await this.saveArchivo(newArray);
+            const arrayProducts = await this.readFolder();
+            const newArray = arrayProducts.filter(item => item.id !== id);
+            await this.saveFile(newArray);
         
 
         } catch (error) {
@@ -129,136 +129,6 @@ class ProductManager{
 
 }
 
-
-
-const manager = new ProductManager("src/productos.json");
-
-manager.getProducts();
-
-const lebeau = {
-    title: "JPG",
-    description: "Le Beau",
-    price: 100,
-    img: "sin imagen",
-    code: "ab123",
-    stock: 14,
-
-}
-
-manager.addProduct(lebeau);
-
-const lemale= {
-    title: "JPG",
-    description: "Le Male",
-    price: 70,
-    img: "sin imagen",
-    code: "ab124",
-    stock: 10,
-
-}
-
-manager.addProduct(lemale);
-
-
-const eros= {
-    title: "Versace",
-    description: "Eros",
-    price: 70,
-    img: "sin imagen",
-    code: "ab126",
-    stock: 16,
-
-}
-
-manager.addProduct(eros);
-
-const lightblue= {
-    title: "DyG",
-    description: "Light Blue",
-    price: 170,
-    img: "sin imagen",
-    code: "ab127",
-    stock: 5,
-
-}
-
-manager.addProduct(lightblue);
-
-const yedp= {
-    title: "YSL",
-    description: "Y",
-    price: 70,
-    img: "sin imagen",
-    code: "ab128",
-    stock: 10,
-
-}
-
-manager.addProduct(yedp);
-
-const one= {
-    title: "Paco Rabbane",
-    description: "One Million",
-    price: 70,
-    img: "sin imagen",
-    code: "ab129",
-    stock: 10,
-
-}
-
-manager.addProduct(one);
-
-const polored= {
-    title: "Ralph Lauren",
-    description: "Polo Red",
-    price: 70,
-    img: "sin imagen",
-    code: "ab130",
-    stock: 10,
-
-}
-
-manager.addProduct(polored);
-
-const swy= {
-    title: "Armani",
-    description: "Stronger With You",
-    price: 70,
-    img: "sin imagen",
-    code: "ab131",
-    stock: 10,
-
-}
-
-manager.addProduct(swy);
-
-const chrome= {
-    title: "Azzaro",
-    description: "Chrome",
-    price: 70,
-    img: "sin imagen",
-    code: "ab132",
-    stock: 10,
-
-}
-
-manager.addProduct(chrome);
-
-const invictus= {
-    title: "Paco Rabbane",
-    description: "Invictus",
-    price: 55,
-    img: "sin imagen",
-    code: "ab133",
-    stock: 10,
-
-}
-
-manager.addProduct(invictus);
-
-
-
-manager.getProducts();
 
 
 
